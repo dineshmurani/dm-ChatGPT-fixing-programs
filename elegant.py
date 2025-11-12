@@ -89,41 +89,97 @@ more elegant by chatGPT
 """
 more elegant code with password checker
 """
+# import string
+#
+# def check_password(password: str) -> dict:
+#     """Check password criteria and return a dictionary of booleans."""
+#     symbols = set(string.punctuation)
+#     return {
+#         "length": len(password) >= 8,
+#         "digits": any(c.isdigit() for c in password),
+#         "upper-case": any(c.isupper() for c in password),
+#         "lower-case": any(c.islower() for c in password),
+#         "symbols": any(c in symbols for c in password)
+#     }
+#
+# def password_feedback(strength: dict) -> None:
+#     """Print user-friendly feedback based on password strength."""
+#     if all(strength.values()):
+#         print("✅ Strong Password")
+#     else:
+#         print("❌ Weak Password. Improve by adding:")
+#         for criterion, passed in strength.items():
+#             if not passed:
+#                 messages = {
+#                     "length": "- At least 8 characters",
+#                     "digits": "- At least one digit",
+#                     "upper-case": "- At least one uppercase letter",
+#                     "lower-case": "- At least one lowercase letter",
+#                     "symbols": "- At least one special symbol (!@#$...)"
+#                 }
+#                 print(messages[criterion])
+#
+# # Example usage
+# password = input("Enter new password: ")
+# strength = check_password(password)
+#
+# print(strength)         # Show the detailed boolean dictionary
+# password_feedback(strength)
+
+"""
+uses classes better than mathods
+"""
+
 import string
 
-def check_password(password: str) -> dict:
-    """Check password criteria and return a dictionary of booleans."""
-    symbols = set(string.punctuation)
-    return {
-        "length": len(password) >= 8,
-        "digits": any(c.isdigit() for c in password),
-        "upper-case": any(c.isupper() for c in password),
-        "lower-case": any(c.islower() for c in password),
-        "symbols": any(c in symbols for c in password)
-    }
+class PasswordChecker:
+    def __init__(self, password: str):
+        self.password = password
+        self.symbols = set(string.punctuation)
+        self.criteria = {
+            "length": False,
+            "digits": False,
+            "upper-case": False,
+            "lower-case": False,
+            "symbols": False
+        }
 
-def password_feedback(strength: dict) -> None:
-    """Print user-friendly feedback based on password strength."""
-    if all(strength.values()):
-        print("✅ Strong Password")
-    else:
-        print("❌ Weak Password. Improve by adding:")
-        for criterion, passed in strength.items():
-            if not passed:
-                messages = {
-                    "length": "- At least 8 characters",
-                    "digits": "- At least one digit",
-                    "upper-case": "- At least one uppercase letter",
-                    "lower-case": "- At least one lowercase letter",
-                    "symbols": "- At least one special symbol (!@#$...)"
-                }
-                print(messages[criterion])
+    def check(self):
+        """Check all password criteria."""
+        self.criteria["length"] = len(self.password) >= 8
+        self.criteria["digits"] = any(c.isdigit() for c in self.password)
+        self.criteria["upper-case"] = any(c.isupper() for c in self.password)
+        self.criteria["lower-case"] = any(c.islower() for c in self.password)
+        self.criteria["symbols"] = any(c in self.symbols for c in self.password)
+        return self.criteria
+
+    def is_strong(self) -> bool:
+        """Return True if all criteria are met."""
+        return all(self.criteria.values())
+
+    def feedback(self):
+        """Print user-friendly feedback based on the password strength."""
+        if self.is_strong():
+            print("✅ Strong Password")
+        else:
+            print("❌ Weak Password. Improve by adding:")
+            messages = {
+                "length": "- At least 8 characters",
+                "digits": "- At least one digit",
+                "upper-case": "- At least one uppercase letter",
+                "lower-case": "- At least one lowercase letter",
+                "symbols": "- At least one special symbol (!@#$...)"
+            }
+            for criterion, passed in self.criteria.items():
+                if not passed:
+                    print(messages[criterion])
+
 
 # Example usage
 password = input("Enter new password: ")
-strength = check_password(password)
-
-print(strength)         # Show the detailed boolean dictionary
-password_feedback(strength)
+checker = PasswordChecker(password)
+checker.check()
+print(checker.criteria)  # Show detailed check
+checker.feedback()
 
 
